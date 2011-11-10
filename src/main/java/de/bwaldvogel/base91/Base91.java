@@ -3,7 +3,7 @@ package de.bwaldvogel.base91;
 import java.io.ByteArrayOutputStream;
 
 /**
- * Cleaned up version of Jochaim Henke's original code from
+ * Modified version of Jochaim Henke's original code from
  * http://base91.sourceforge.net/
  *
  * basE91 encoding/decoding routines
@@ -34,7 +34,7 @@ import java.io.ByteArrayOutputStream;
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @author Joachim Henke (Original version)
- * @author Benedikt Waldvogel (Code cleanup)
+ * @author Benedikt Waldvogel (Modifications)
  */
 public class Base91 {
 
