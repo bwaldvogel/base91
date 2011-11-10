@@ -1,6 +1,7 @@
 Modified version of Jochaim Henke's Base91 Encoder/Decoder from http://base91.sourceforge.net/
 
 TODOs:
+
 - Add a Base91InputStream and Base91OutputStream that encodes/decodes blockwise as the original one
 
 basE91 encoding/decoding routines
