@@ -1,11 +1,11 @@
 package de.bwaldvogel.base91;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Modified version of Jochaim Henke's original code from
- * http://base91.sourceforge.net/
+ * Modified version of Jochaim Henke’s original code from http://base91.sourceforge.net/
  * <p>
  * basE91 encoding/decoding routines
  * <p>
@@ -39,16 +39,16 @@ import java.nio.charset.StandardCharsets;
  */
 public class Base91 {
 
-    private static final byte[] ENCODING_TABLE;
+    static final byte[] ENCODING_TABLE;
     private static final byte[] DECODING_TABLE;
-    private static final int BASE;
+    static final int BASE;
     private static final float AVERAGE_ENCODING_RATIO = 1.2297f;
 
     static {
         String ts = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!#$%&()*+,./:;<=>?@[]^_`{|}~\"";
         ENCODING_TABLE = ts.getBytes(StandardCharsets.ISO_8859_1);
-        assert ENCODING_TABLE.length == 91;
         BASE = ENCODING_TABLE.length;
+        assert BASE == 91;
 
         DECODING_TABLE = new byte[256];
         for (int i = 0; i < 256; ++i)
@@ -59,39 +59,15 @@ public class Base91 {
     }
 
     public static byte[] encode(byte[] data) {
-
-        int estimatedSize = (int) Math.ceil(data.length * AVERAGE_ENCODING_RATIO);
-        ByteArrayOutputStream output = new ByteArrayOutputStream(estimatedSize);
-
-        int ebq = 0;
-        int en = 0;
-        for (int i = 0; i < data.length; ++i) {
-            ebq |= (data[i] & 255) << en;
-            en += 8;
-            if (en > 13) {
-                int ev = ebq & 8191;
-
-                if (ev > 88) {
-                    ebq >>= 13;
-                    en -= 13;
-                } else {
-                    ev = ebq & 16383;
-                    ebq >>= 14;
-                    en -= 14;
-                }
-                output.write(ENCODING_TABLE[ev % BASE]);
-                output.write(ENCODING_TABLE[ev / BASE]);
-            }
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Base91OutputStream base91OutputStream = new Base91OutputStream(out);
+        try {
+            base91OutputStream.write(data);
+            base91OutputStream.flush();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to encode", e);
         }
-
-        if (en > 0) {
-            output.write(ENCODING_TABLE[ebq % BASE]);
-            if (en > 7 || ebq > 90) {
-                output.write(ENCODING_TABLE[ebq / BASE]);
-            }
-        }
-
-        return output.toByteArray();
+        return out.toByteArray();
     }
 
     public static byte[] decode(byte[] data) {
