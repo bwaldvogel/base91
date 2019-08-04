@@ -1,0 +1,72 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'java-library'
+    id 'jacoco'
+    id 'com.github.kt3k.coveralls' version '2.8.2'
+}
+
+group = "de.bwaldvogel"
+version = '1.0'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+compileJava.options.encoding = 'UTF-8'
+
+ext {
+    title = 'base91'
+}
+
+task sourceJar(type: Jar) {
+    archiveClassifier = "sources"
+    from sourceSets.main.allJava
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier = "javadoc"
+    from javadoc.destinationDir
+}
+
+repositories {
+    mavenCentral()
+}
+
+jacocoTestReport {
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = false
+    }
+    dependsOn test
+}
+
+wrapper {
+    gradleVersion = "5.5.1"
+    distributionType = Wrapper.DistributionType.ALL
+}
+
+dependencies {
+    testImplementation group: 'junit', name: 'junit', version: 'latest.release'
+    testImplementation group: 'org.slf4j', name: 'slf4j-api', version: 'latest.release'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: 'latest.release'
+
+    testRuntimeOnly group: 'ch.qos.logback', name: 'logback-classic', version: 'latest.release'
+
+    components.all { ComponentMetadataDetails details ->
+        details.statusScheme = ['candidate', 'release']
+        if (details.id.version =~ /(?i).+([-.])(CANDIDATE|RC|BETA|ALPHA).*/) {
+            details.status = 'candidate'
+        } else {
+            details.status = 'release'
+        }
+    }
+}
+
+dependencyLocking {
+    lockAllConfigurations()
+}

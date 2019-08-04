@@ -1,3 +1,11 @@
 .*.swp
 *.class
-.settings/
+
+/.idea/
+*.iml
+
+/.gradle/
+/build/
+
+.settings
+.classpath
