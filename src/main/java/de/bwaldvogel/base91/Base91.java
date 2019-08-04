@@ -1,6 +1,7 @@
 package de.bwaldvogel.base91;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Modified version of Jochaim Henke's original code from
@@ -45,7 +46,8 @@ public class Base91 {
 
     static {
         String ts = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!#$%&()*+,./:;<=>?@[]^_`{|}~\"";
-        ENCODING_TABLE = ts.getBytes();
+        ENCODING_TABLE = ts.getBytes(StandardCharsets.ISO_8859_1);
+        assert ENCODING_TABLE.length == 91;
         BASE = ENCODING_TABLE.length;
 
         DECODING_TABLE = new byte[256];
