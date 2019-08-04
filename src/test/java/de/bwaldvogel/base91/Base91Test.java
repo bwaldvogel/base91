@@ -1,6 +1,6 @@
 package de.bwaldvogel.base91;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -10,12 +10,17 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Base91Test {
 
+	private static final Logger log = LoggerFactory.getLogger(Base91Test.class);
+
 	private static final Charset CHARSET = StandardCharsets.UTF_8;
-	private static final double worstCaseRatio = 1.2308;
-	private static final double bestCaseRatio = 1.1429;
+	private static final double WORST_CASE_RATIO = 1.2308;
+	private static final double BEST_CASE_RATIO = 1.1429;
+	private static final long RANDOM_SEED = 4711;
 
 	@Test
 	public void testEncodeDecode() throws Exception {
@@ -31,14 +36,14 @@ public class Base91Test {
 			String encodedText = entry.getValue();
 			byte[] encode = Base91.encode(plainText.getBytes(CHARSET));
 			byte[] decode = Base91.decode(encode);
-			assertEquals(encodedText, new String(encode, CHARSET));
-			assertEquals(plainText, new String(decode, CHARSET));
+			assertThat(new String(encode, CHARSET)).isEqualTo(encodedText);
+			assertThat(new String(decode, CHARSET)).isEqualTo(plainText);
 		}
 	}
 
 	@Test
 	public void testRandomEncodeDecode() throws Exception {
-		Random random = new Random(System.currentTimeMillis());
+		Random random = new Random(RANDOM_SEED);
 
 		int encodedSize = 0;
 		int plainSize = 0;
@@ -52,7 +57,7 @@ public class Base91Test {
 			byte[] encode = Base91.encode(bytes);
 			byte[] decode = Base91.decode(encode);
 
-			assertArrayEquals(decode, bytes);
+			assertThat(decode).containsExactly(bytes);
 
 			plainSize += bytes.length;
 			encodedSize += encode.length;
@@ -63,10 +68,9 @@ public class Base91Test {
 		}
 
 		double encodingRatio = (double) encodedSize / plainSize;
-		assertTrue(encodingRatio <= worstCaseRatio);
-		assertTrue(encodingRatio >= bestCaseRatio);
-		System.out.println("encoding ratio: " + encodingRatio);
-		System.out.println("worst encoding ratio: " + worstEncodingRatio);
-		System.out.println("best encoding ratio: " + bestEncodingRatio);
+		assertThat(encodingRatio).isBetween(BEST_CASE_RATIO, WORST_CASE_RATIO);
+		log.info("encoding ratio: {}", encodingRatio);
+		log.info("worst encoding ratio: {}", worstEncodingRatio);
+		log.info("best encoding ratio: {}", bestEncodingRatio);
 	}
 }
