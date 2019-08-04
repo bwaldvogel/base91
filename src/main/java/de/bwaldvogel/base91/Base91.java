@@ -101,8 +101,7 @@ public class Base91 {
         ByteArrayOutputStream output = new ByteArrayOutputStream(estimatedSize);
 
         for (int i = 0; i < data.length; ++i) {
-            if (DECODING_TABLE[data[i]] == -1)
-                continue;
+            assert DECODING_TABLE[data[i]] != -1;
             if (dv == -1)
                 dv = DECODING_TABLE[data[i]];
             else {
