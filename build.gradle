@@ -7,7 +7,7 @@ buildscript {
 plugins {
     id 'java-library'
     id 'jacoco'
-    id 'com.github.kt3k.coveralls' version '2.8.2'
+    id 'com.github.kt3k.coveralls' version '2.10.1'
 }
 
 group = "de.bwaldvogel"
@@ -46,7 +46,7 @@ jacocoTestReport {
 }
 
 wrapper {
-    gradleVersion = "5.5.1"
+    gradleVersion = "6.7.1"
     distributionType = Wrapper.DistributionType.ALL
 }
 
