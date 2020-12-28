@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/bwaldvogel/base91.png?branch=master)](https://travis-ci.org/bwaldvogel/base91)
+[![CI](https://github.com/bwaldvogel/base91/workflows/CI/badge.svg)](https://github.com/bwaldvogel/base91/actions)
 [![Coverage Status](https://coveralls.io/repos/github/bwaldvogel/base91/badge.svg?branch=master)](https://coveralls.io/github/bwaldvogel/base91?branch=master)
 [![BSD 3-Clause License](https://img.shields.io/github/license/bwaldvogel/base91.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
